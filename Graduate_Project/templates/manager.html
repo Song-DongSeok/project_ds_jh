@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 상태 확인</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #d4e3f5;
+        }
+
+        header, nav, section, footer {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            background-color: #1f5fa8;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        nav {
+            margin-top: 10px;
+            text-align: center;
+            /* 높이를 50%로 설정하여 세로로 절반으로 줄임 */
+            height: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        section {
+            text-align: center;
+        }
+
+        h2 {
+            color: #1f5fa8;
+        }
+
+        .order-status {
+            margin-top: 20px;
+        }
+
+        .status-form {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .form-input {
+            margin-bottom: 10px;
+        }
+
+        .check-status-button {
+            background-color: #1f5fa8;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1f5fa8;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    
+<header>
+    <h1>Paris Order</h1>
+</header>
+    
+<nav>
+    <h3>관리자 페이지입니다.</h3>
+</nav>
+    
+<section>
+    <h2>주문 목록</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>주문 번호</th>
+                <th>주문 시간</th>
+                <th>교번</th>
+                <th>아메리카노</th>
+                <th>라떼</th>
+                <th>차이티</th>
+                <th>프라프치노</th>
+                <th>스무디</th>
+                <th>에이드</th>
+                <th>진행률</th>
+                <th>제작 순서</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for data in db_all %}
+                <tr>
+                    <td>{{ data.order_no }}</td>
+                    <td>{{ data.order_time }}</td>
+                    <td>{{ data.st_id }}</td>
+                    <td>{{ data.AM }}</td>
+                    <td>{{ data.LA }}</td>
+                    <td>{{ data.CH }}</td>
+                    <td>{{ data.PR }}</td>
+                    <td>{{ data.SM }}</td>
+                    <td>{{ data.AD }}</td>
+                    <td>{{ (1 - (data.order_remain / data.order_duration)) * 100 }}%</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+    
+</body>
+</html>

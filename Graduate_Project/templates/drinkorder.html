@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음료 주문 - 음료 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #d4e3f5;
+        }
+
+        header,
+        nav,
+        section,
+        footer {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            background-color: #1f5fa8;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        nav {
+            margin-top: 10px;
+            text-align: center;
+            height: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        section {
+            text-align: center;
+        }
+
+        h2 {
+            color: #1f5fa8;
+        }
+
+        .drink-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .drink {
+            border: 2px solid #1f5fa8;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+        }
+
+        .order-summary {
+            margin-top: 20px;
+        }
+
+        .quantity-input {
+            width: 50px;
+        }
+
+        .checkout-button {
+            background-color: #1f5fa8;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="orderForm" action="/checkout" method="POST">
+        <header>
+            <h1>Paris Order</h1>
+        </header>
+        <nav>
+            <h3>원하시는 음료를 선택하시오.</h3>
+        </nav>
+        <section>
+            <h2>음료 목록</h2>
+            <div class="drink-container">
+                <!-- 음료 목록 직접 지정 -->
+                <!-- 음료 사진은 추후 추가 -->
+                <!-- 각 음료에는 주문 버튼이 있어야 함 -->
+                <div class="drink">
+                    <h3>아메리카노</h3>
+                    <p>가격: 2000원</p>
+                    <button type="button" onclick="addToOrder('아메리카노', 2000)">주문</button>
+                </div>
+                <div class="drink">
+                    <h3>라떼</h3>
+                    <p>가격: 3000원</p>
+                    <button type="button" onclick="addToOrder('라떼', 3000)">주문</button>
+                </div>
+                <div class="drink">
+                    <h3>차이티</h3>
+                    <p>가격: 3500원</p>
+                    <button type="button" onclick="addToOrder('차이티', 3500)">주문</button>
+                </div>
+                <div class="drink">
+                    <h3>프라프치노</h3>
+                    <p>가격: 4000원</p>
+                    <button type="button" onclick="addToOrder('프라프치노', 4000)">주문</button>
+                </div>
+                <div class="drink">
+                    <h3>스무디</h3>
+                    <p>가격: 4500원</p>
+                    <button type="button" onclick="addToOrder('스무디', 4500)">주문</button>
+                </div>
+                <div class="drink">
+                    <h3>에이드</h3>
+                    <p>가격: 4500원</p>
+                    <button type="button" onclick="addToOrder('에이드', 4500)">주문</button>
+                </div>
+                <!-- 나머지 음료도 동일하게 추가 -->
+            </div>
+            <div class="order-summary">
+                <h2>주문 현황</h2>
+                <!-- 주문 현황은 여기에 유지 -->
+                <label for="studentId">교번:</label>
+                <input type="text" id="studentId" name="studentId">
+                <div id="orderSummary"></div>
+            </div>
+            <button type="submit" class="checkout-button" onclick="tryCheckout()">주문하기</button>
+        </section>
+
+        <script>
+            const orderSummaryElement = document.getElementById('orderSummary');
+            let order = [];
+
+            function addToOrder(drinkName, price) {
+                const studentId = document.getElementById('studentId').value;
+
+                const existingOrder = order.find(item => item.name === drinkName && item.studentId === studentId);
+
+                if (existingOrder) {
+                    existingOrder.quantity++;
+                } else {
+                    order.push({ name: drinkName, price, quantity: 1, studentId });
+                }
+
+                updateOrderSummary();
+            }
+
+            function updateOrderSummary() {
+                orderSummaryElement.innerHTML = ''; // 주문 현황 초기화
+
+                order.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.innerHTML = `
+                        <p>${item.name} x
+                        <input class="quantity-input" type="number" name="${item.name}" min="1" value="${item.quantity || 0}" onchange="updateQuantity('${item.name}', this.value)">
+                        <button onclick="removeFromOrder('${item.name}')">취소</button>
+                        가격: ${(item.price * item.quantity)} 원
+                        </p>
+                    `;
+                    orderSummaryElement.appendChild(itemElement);
+                });
+
+                const totalPrice = order.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                const totalPriceElement = document.createElement('p');
+                totalPriceElement.innerHTML = `총 가격: ${totalPrice}원`;
+                orderSummaryElement.appendChild(totalPriceElement);
+            }
+
+            function updateQuantity(drinkName, quantity) {
+                const existingOrder = order.find(item => item.name === drinkName);
+                if (existingOrder) {
+                    existingOrder.quantity = parseInt(quantity, 10);
+                }
+                updateOrderSummary();
+            }
+
+            function removeFromOrder(drinkName) {
+                order = order.filter(item => item.name !== drinkName);
+                updateOrderSummary();
+            }
+
+            function tryCheckout() {
+                event.preventDefault();
+                
+                const studentId = document.getElementById('studentId').value;
+
+                // Check if the alternation is a 5-digit number
+                if (!/^\d{5}$/.test(studentId)) {
+                    alert('교번이 5자리 숫자가 아닙니다.');
+                    return;
+                }
+
+                // Check if the total price is greater than 0
+                const totalPrice = order.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+                if (totalPrice === 0) {
+                    alert('음료를 선택하지 않았습니다.');
+                    return;
+                }
+                
+                // 현재시간 데이터 서버에 전송
+                const itemElement = document.createElement('div');
+                const timestampValue = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: false });
+                itemElement.innerHTML = `
+                    <input type="hidden" name="timestamp" value="${timestampValue}">
+                `;
+                orderSummaryElement.appendChild(itemElement);
+                
+                // 주문 완료 메세지 출력 및 처음 화면으로 리디렉션
+                alert('주문이 완료되었습니다. 처음 화면으로 돌아갑니다.');
+                window.location.replace("/");
+                
+                document.getElementById('orderForm').submit();
+            }
+        </script>
+    </form>
+</body>
+
+</html>
