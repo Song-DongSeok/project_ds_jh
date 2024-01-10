@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 상태 확인</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #d4e3f5;
+        }
+
+        header, nav, section, footer {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            background-color: #1f5fa8;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        nav {
+            margin-top: 10px;
+            text-align: center;
+            /* 높이를 50%로 설정하여 세로로 절반으로 줄임 */
+            height: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        nav a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        section {
+            text-align: center;
+        }
+
+        h2 {
+            color: #1f5fa8;
+        }
+
+        .order-status {
+            margin-top: 20px;
+        }
+
+        .status-form {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .form-input {
+            margin-bottom: 10px;
+        }
+
+        .check-status-button {
+            background-color: #1f5fa8;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Paris Order</h1>
+</header>
+
+<nav>
+    <h3>교번을 입력하시고 상태를 확인하세요.</h3>
+</nav>
+
+<section>
+    <h2>주문 상태 확인</h2>
+    <form action="/check_status" method="POST">
+        <div class="status-form">
+            <label for="employeeNumber">교번 입력 (5자리):</label>
+            <input type="text" name="employeeNumber" title="숫자 5자리를 입력하세요." required>
+            <button type="submit" class="check-status-button">주문 상태 확인</button>
+        </div>
+    </form>
+</section>
+
+<footer>
+    <button class="back-to-home-button" onclick="gotohome()">첫 화면으로 돌아가기</button>
+</footer>    
+    
+<script>
+    function gotohome() {
+        window.location.href = "https://parisorder.run.goorm.io";
+    }
+</script>
+
+</body>
+</html>
